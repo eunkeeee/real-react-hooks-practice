@@ -12,7 +12,7 @@ const useTitle = (initialTitle) => {
 };
 const App = () => {
   const titleUpdater = useTitle("Loading...");
-  setTimeout(() => titleUpdater("Home", 5000));
+  setTimeout(() => titleUpdater("Home"), 5000);
   const sayHello = () => console.log("hello");
   const [number, setNumber] = useState(0);
   const [aNumber, setAnumber] = useState(0);
