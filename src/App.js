@@ -1,24 +1,29 @@
 import React, { useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
 
-const usePreventLeave = () => {
-  const listener = (event) => {
-    event.preventDefault();
-    // 이걸 넣어줘야 작동함... 왜?
-    event.returnValue = "";
+const useBeforeLeave = (onBefore) => {
+  const handle = (event) => {
+    const { clientY } = event;
+    if (clientY <= 0) {
+      onBefore();
+    }
   };
-  const enablePrevent = () => window.addEventListener("beforeunload", listener);
-  const disablePrevent = () =>
-    window.removeEventListener("beforeunload", listener);
-  return { enablePrevent, disablePrevent };
-};
 
+  useEffect(() => {
+    document.addEventListener("mouseleave", handle);
+    return () => document.removeEventListener("mouseleave", handle);
+  }, []);
+  if (!onBefore || typeof onBefore !== "function") {
+    return;
+  }
+};
 const App = () => {
-  const { enablePrevent, disablePrevent } = usePreventLeave();
+  const begForLife = () => console.log("Please don't leave...");
+  // 아무것도 return하지 않으므로 가능
+  useBeforeLeave(begForLife);
   return (
     <div className="App">
-      <button onClick={enablePrevent}>Protect</button>
-      <button onClick={disablePrevent}>Unprotect</button>
+      <h1>Hello</h1>
     </div>
   );
 };
